@@ -9,6 +9,23 @@ TriggerEvent('chat:addSuggestion', '/eliminaveicolo', 'Elimina un veicolo dalla 
 	{ name="plate", help="Targa veicolo" }
 })
 
+function randomCharacter(length)
+	local res = ""
+	for i = 1, length do res = res .. string.char(math.random(97, 122))	end
+	return res
+end
+
+function randomNumber(length)
+	local res = ""
+	for i = 1, length do res = res .. string.char(math.random(48,  57)) end
+	return res
+end
+
+CustomizePlate = function()
+    return string.upper(randomNumber(2) .. randomCharacter(3) .. randomNumber(3))
+end
+
+
 RegisterNetEvent('esx_giveownedcar:spawnVehicle')
 AddEventHandler('esx_giveownedcar:spawnVehicle', function(playerID, model, playerName, type, vehicleType)
     local playerPed = PlayerPedId()
@@ -26,7 +43,7 @@ AddEventHandler('esx_giveownedcar:spawnVehicle', function(playerID, model, playe
             SetEntityVisible(vehicle, false, false)
             SetEntityCollision(vehicle, false)
             
-            local newPlate     = exports.wh_cardealer:GeneratePlate()
+            local newPlate     = CustomizePlate()
             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
             vehicleProps.plate = newPlate
             TriggerServerEvent('esx_giveownedcar:setVehicle', vehicleProps, playerID, vehicleType, model, GetEntityModel(model))
