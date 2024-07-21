@@ -9,24 +9,6 @@ TriggerEvent('chat:addSuggestion', '/eliminaveicolo', 'Elimina un veicolo dalla 
 	{ name="plate", help="Targa veicolo" }
 })
 
-function GetLabel(modelname)
-    local Categorie = {}
-	local Label = {}
-	local Configurazione = exports.wh_cardealer:getConfig()
-    for k,v in pairs(Configurazione) do
-        for j,y in pairs(v.VehicleLists) do
-            if y.Model == modelname then
-				return y.Label
-            else
-            end
-        end
-    end
-end
-
-exports("GetLabel", function(modelname)
-	return GetLabel(modelname)
-end)
-
 RegisterNetEvent('esx_giveownedcar:spawnVehicle')
 AddEventHandler('esx_giveownedcar:spawnVehicle', function(playerID, model, playerName, type, vehicleType)
     local playerPed = PlayerPedId()
@@ -47,7 +29,7 @@ AddEventHandler('esx_giveownedcar:spawnVehicle', function(playerID, model, playe
             local newPlate     = exports.wh_cardealer:GeneratePlate()
             local vehicleProps = ESX.Game.GetVehicleProperties(vehicle)
             vehicleProps.plate = newPlate
-            TriggerServerEvent('esx_giveownedcar:setVehicle', vehicleProps, playerID, vehicleType, model, GetLabel(model))
+            TriggerServerEvent('esx_giveownedcar:setVehicle', vehicleProps, playerID, vehicleType, model, GetEntityModel(model))
             ESX.Game.DeleteVehicle(vehicle)    
             if type ~= 'console' and type ~= 'discord' then
                 TriggerEvent('notifica', "Il veicolo " ..model.." con targa "..newPlate.." è stato assegnato a "..playerName) 
